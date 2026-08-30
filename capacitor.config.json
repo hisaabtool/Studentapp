@@ -1,0 +1,6 @@
+{
+  "appId": "com.rahul.studyhub",
+  "appName": "Study Hub",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}

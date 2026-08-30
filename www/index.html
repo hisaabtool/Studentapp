@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Study Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header" id="app-title">Study Hub</div>
+
+    <!-- Home Tab -->
+    <div id="home" class="section active-section">
+        <div class="card">
+            <div>
+                <h3>UP Lekhpal Notes</h3>
+                <p>Complete syllabus & updates</p>
+            </div>
+            <button class="btn" onclick="openPDF('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')">Read PDF</button>
+        </div>
+        <div class="card">
+            <div>
+                <h3>Previous Year Papers</h3>
+                <p>2015 - 2025 Solved Papers</p>
+            </div>
+            <button class="btn" onclick="openPDF('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')">Read PDF</button>
+        </div>
+    </div>
+
+    <!-- PDF Viewer Modal (Hidden by default) -->
+    <div id="pdf-viewer" class="modal">
+        <div class="modal-header">
+            <span id="pdf-title">Reading Document...</span>
+            <button class="close-btn" onclick="closePDF()">Close ❌</button>
+        </div>
+        <iframe id="pdf-frame" src="" frameborder="0"></iframe>
+    </div>
+
+    <!-- Mock Test Tab -->
+    <div id="mock" class="section">
+        <div class="card mock-card">
+            <h3>Live Mock Test: General Knowledge</h3>
+            <p>Q1. India ki rajdhani kya hai?</p>
+            <button class="btn option-btn">A) Mumbai</button>
+            <button class="btn option-btn">B) New Delhi</button>
+        </div>
+    </div>
+
+    <!-- Tools Tab -->
+    <div id="tools" class="section">
+        <div class="card">
+            <div>
+                <h3>Photo Resizer</h3>
+                <p>Compress image for exams</p>
+            </div>
+            <button class="btn">Use</button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="switchTab('home', 'Study Hub', this)"><span class="nav-icon">📚</span> Home</div>
+        <div class="nav-item" onclick="switchTab('mock', 'Mock Tests', this)"><span class="nav-icon">📝</span> Mock</div>
+        <div class="nav-item" onclick="switchTab('tools', 'Smart Tools', this)"><span class="nav-icon">🛠️</span> Tools</div>
+        <div class="nav-item" onclick="window.open('https://youtube.com/@rahul-t9j8b', '_blank')"><span class="nav-icon">▶️</span> Videos</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

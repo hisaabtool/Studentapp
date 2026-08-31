@@ -1,58 +1,42 @@
 // --- 1. STUDY MATERIAL DATABASE ---
 const materialDB = {
-    'lekhpal': {
-        'Hindi Vyakaran': [{ chapter: 'वर्णमाला और समास', link: '#' }],
-        'Gram Samaj & Vikas': [{ chapter: 'कृषि एवं पंचायती राज', link: '#' }]
-    },
-    'police': {
-        'UP Police Constable': [{ chapter: 'PYQ Set 1 (Hindi)', link: '#' }]
-    },
-    'ssc': { 
-        'SSC CGL (Graduate Level)': [{ chapter: 'CGL Tier 1 - English Paper', link: 'https://www.adda247.com/jobs/wp-content/uploads/2021/05/31123422/SSC-CGL-28-Dec-English.pdf' }]
-    }
+    'lekhpal': { 'Hindi Vyakaran': [{ chapter: 'वर्णमाला और समास', link: '#' }] },
+    'police': { 'UP Police Constable': [{ chapter: 'PYQ Set 1 (Hindi)', link: '#' }] },
+    'ssc': { 'SSC CGL': [{ chapter: 'CGL Tier 1 English', link: '#' }] }
 };
 
-// --- 2. MOCK TEST DATABASE GENERATOR (10 Sets Each) ---
-const mockDatabase = {};
-
-// Asali Lekhpal ke kuch questions jo Set 1 me dikhenge
-const realLekhpalQs = [
-    { t: "Hindi", q: "'आग' का पर्यायवाची कौन सा है?", o: ["अनल", "अनिल", "सलिल", "गगन"], a: 0 },
-    { t: "Hindi", q: "महोदय का संधि विच्छेद क्या है?", o: ["महो+दय", "महा+उदय", "मही+उदय", "महा+औदय"], a: 1 },
-    { t: "UP GK", q: "उत्तर प्रदेश का राजकीय पुष्प क्या है?", o: ["कमल", "पलाश", "गुलाब", "गेंदा"], a: 1 },
-    { t: "Gram Samaj", q: "एक बीघा में कितने बिस्वा होते हैं?", o: ["10", "15", "20", "25"], a: 2 },
-    { t: "Maths", q: "100 का 25% कितना होगा?", o: ["20", "25", "30", "50"], a: 1 }
+// --- 2. UNIVERSAL TEST-SERIES GENERATOR ---
+// Aap yahan koi bhi naya exam add karenge, app apne aap uske mock test bana degi!
+const testConfigs = [
+    { id: 'lekhpal', title: 'UP Lekhpal PYQ Series', qs: 100, time: 120, sets: 10, bg: '#E0E7FF', text: '#4F46E5', icon: '📝' },
+    { id: 'police', title: 'UP Police PYQ Series', qs: 150, time: 120, sets: 10, bg: '#FEF3C7', text: '#D97706', icon: '🚔' },
+    { id: 'ssc_cgl', title: 'SSC CGL Tier-1 Series', qs: 100, time: 60, sets: 10, bg: '#FCE7F3', text: '#BE185D', icon: '🎓' },
+    { id: 'ssc_gd', title: 'SSC GD Constable Series', qs: 80, time: 60, sets: 10, bg: '#D1FAE5', text: '#047857', icon: '🛡️' }
 ];
 
-// Lekhpal ke 10 Sets generate karna (Har set me 100 questions)
-for(let setNum = 1; setNum <= 10; setNum++) {
-    let testArray = [];
-    for(let qNum = 1; qNum <= 100; qNum++) {
-        // Agar Set 1 hai aur shuru ke questions hain, toh asali data daalo
-        if(setNum === 1 && qNum <= realLekhpalQs.length) {
-            testArray.push(realLekhpalQs[qNum-1]);
-        } else {
-            // Baaki 100 poore karne ke liye auto-fill taaki app test ho sake
-            testArray.push({ t: "Lekhpal Section", q: `Set ${setNum} - Lekhpal Question No. ${qNum}`, o: ["Option A", "Option B", "Option C", "Option D"], a: 0 });
+const mockDatabase = {};
+
+// Generator Engine
+testConfigs.forEach(config => {
+    for(let setNum = 1; setNum <= config.sets; setNum++) {
+        let testArray = [];
+        for(let qNum = 1; qNum <= config.qs; qNum++) {
+            testArray.push({ 
+                t: `${config.title} Section`, 
+                q: `${config.title} (Set ${setNum}) - Question No. ${qNum}`, 
+                o: ["Option A", "Option B", "Option C", "Option D"], 
+                a: Math.floor(Math.random() * 4) // Random answer generate karega (0, 1, 2 ya 3)
+            });
         }
+        mockDatabase[`${config.id}_set_${setNum}`] = testArray;
     }
-    mockDatabase['lekhpal_set_' + setNum] = testArray;
-}
-
-// UP Police ke 10 Sets generate karna (Har set me 150 questions)
-for(let setNum = 1; setNum <= 10; setNum++) {
-    let testArray = [];
-    for(let qNum = 1; qNum <= 150; qNum++) {
-        testArray.push({ t: "UP Police Section", q: `Set ${setNum} - Police PYQ No. ${qNum}`, o: ["A", "B", "C", "D"], a: 1 });
-    }
-    mockDatabase['police_set_' + setNum] = testArray;
-}
+});
 
 
-// --- 3. APP LOGIC & TABS ---
+// --- 3. APP UI LOGIC ---
 window.onload = () => { 
     loadMaterials('lekhpal', document.querySelector('.cat-btn')); 
-    renderTestSeriesDashboard(); // Dashboard UI banayega
+    renderTestSeriesDashboard(); 
 };
 
 function switchTab(tabId, title, element) {
@@ -61,7 +45,6 @@ function switchTab(tabId, title, element) {
     document.getElementById(tabId).classList.add('active-section');
     element.classList.add('active');
     document.getElementById('app-title').innerText = title;
-    
     if(tabId === 'mock') checkTestProgress();
 }
 
@@ -91,22 +74,108 @@ function closePDF() {
     document.getElementById('pdf-frame').src = '';
 }
 
-// --- 4. MOCK TEST UI & ENGINE ---
-let activeTestId = "";
-let currentTest = [], currentQuestionIndex = 0, userAnswers = [];
-
-// JS se HTML me 10-10 Tests ke cards banana
+// --- 4. MOCK TEST UI GENERATOR ---
 function renderTestSeriesDashboard() {
-    let lekhpalHtml = "", policeHtml = "";
+    let dashboardHtml = "";
     
-    for(let i=1; i<=10; i++) {
-        lekhpalHtml += `
-        <div class="test-card">
-            <div>
-                <h4>PYQ Set - ${i}</h4>
-                <span id="badge-lekhpal_set_${i}" class="status-badge">Not Attempted ⏳</span>
-            </div>
-            <button class="btn" onclick="startTest('lekhpal_set_${i}')">Start</button>
+    // Config ke hisaab se sabhi exams ke cards apne aap banayega
+    testConfigs.forEach(config => {
+        dashboardHtml += `
+        <div style="background: ${config.bg}; padding: 10px; border-radius: 10px; margin-bottom: 15px;">
+            <h3 style="margin: 0; color: ${config.text};">${config.icon} ${config.title}</h3>
+            <p style="margin: 5px 0 10px 0; font-size: 12px; color: #4B5563;">${config.qs} Questions | ${config.time} Mins</p>
+            <div style="display: flex; flex-direction: column;">`;
+        
+        for(let i=1; i<=config.sets; i++) {
+            dashboardHtml += `
+            <div class="test-card">
+                <div>
+                    <h4>PYQ Set - ${i}</h4>
+                    <span id="badge-${config.id}_set_${i}" class="status-badge">Not Attempted ⏳</span>
+                </div>
+                <button class="btn" style="background: ${config.text};" onclick="startTest('${config.id}_set_${i}')">Start</button>
+            </div>`;
+        }
+        dashboardHtml += `</div></div>`;
+    });
+    
+    document.getElementById('test-dashboard-container').innerHTML = dashboardHtml;
+    checkTestProgress();
+}
+
+function checkTestProgress() {
+    testConfigs.forEach(config => {
+        for(let i=1; i<=config.sets; i++) {
+            let tid = `${config.id}_set_${i}`;
+            if(localStorage.getItem('completed_' + tid)) {
+                let badge = document.getElementById('badge-' + tid);
+                if(badge) { badge.innerText = "Completed ✅"; badge.classList.add('completed'); }
+            }
+        }
+    });
+}
+
+let activeTestId = "", currentTest = [], currentQuestionIndex = 0, userAnswers = [];
+
+function startTest(testId) {
+    activeTestId = testId;
+    currentTest = mockDatabase[testId];
+    currentQuestionIndex = 0;
+    userAnswers = new Array(currentTest.length).fill(null); 
+    document.getElementById('test-dashboard').style.display = 'none';
+    document.getElementById('quiz-engine').style.display = 'block';
+    loadQuestion();
+}
+
+function loadQuestion() {
+    let qData = currentTest[currentQuestionIndex];
+    document.getElementById('topic-badge').innerText = qData.t;
+    document.getElementById('q-counter').innerText = `Q: ${currentQuestionIndex + 1}/${currentTest.length}`;
+    document.getElementById('question-text').innerText = qData.q;
+    
+    document.getElementById('progress-fill').style.width = ((currentQuestionIndex + 1) / currentTest.length) * 100 + "%";
+    
+    let optionsHtml = '';
+    qData.o.forEach((opt, index) => {
+        let isSelected = userAnswers[currentQuestionIndex] === index ? 'background: #E0E7FF; border: 2px solid var(--primary);' : 'background: #E5E7EB; border: 2px solid transparent;';
+        optionsHtml += `<button style="width: 100%; margin-top: 10px; color: #1F2937; text-align: left; padding: 12px; font-weight: 500; border-radius: 8px; transition: 0.2s; ${isSelected}" onclick="selectAnswer(${index})">${opt}</button>`;
+    });
+    document.getElementById('options-container').innerHTML = optionsHtml;
+
+    let nextBtn = document.getElementById('next-btn');
+    if (currentQuestionIndex === currentTest.length - 1) {
+        nextBtn.innerText = "Submit Test ✔️"; nextBtn.style.background = "#10B981"; 
+    } else {
+        nextBtn.innerText = "Next ➡"; nextBtn.style.background = "var(--primary)";
+    }
+}
+
+function selectAnswer(optIndex) { userAnswers[currentQuestionIndex] = optIndex; loadQuestion(); }
+function nextQuestion() {
+    if (currentQuestionIndex < currentTest.length - 1) { currentQuestionIndex++; loadQuestion(); } 
+    else { calculateResult(); }
+}
+function prevQuestion() { if (currentQuestionIndex > 0) { currentQuestionIndex--; loadQuestion(); } }
+
+function calculateResult() {
+    let score = 0;
+    for (let i = 0; i < currentTest.length; i++) {
+        if (userAnswers[i] === currentTest[i].a) score++;
+    }
+    localStorage.setItem('completed_' + activeTestId, 'true');
+    document.getElementById('quiz-engine').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'block';
+    document.getElementById('score-text').innerText = `${score} / ${currentTest.length}`;
+    
+    let percent = (score / currentTest.length) * 100;
+    document.getElementById('score-message').innerText = percent >= 80 ? "Excellent Preparation! 🔥" : (percent >= 50 ? "Good, but needs revision. 👍" : "Work Harder! You can do it. 📚");
+}
+
+function closeTest() {
+    document.getElementById('result-screen').style.display = 'none';
+    document.getElementById('test-dashboard').style.display = 'block';
+    checkTestProgress(); 
+}
         </div>`;
         
         policeHtml += `

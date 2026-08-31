@@ -3,104 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Study Hub</title>
+    <title>Study Hub Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="header" id="app-title">Study Hub</div>
 
-    <!-- Home Tab -->
+    <!-- Home Tab (Study Materials) -->
     <div id="home" class="section active-section">
         
         <!-- Exam Categories Scroll -->
         <div class="category-scroll">
-            <button class="cat-btn active-cat" onclick="filterExam('lekhpal', this)">UP Lekhpal</button>
-            <button class="cat-btn" onclick="filterExam('ssc', this)">SSC</button>
-            <button class="cat-btn" onclick="filterExam('police', this)">UP Police</button>
-            <button class="cat-btn" onclick="filterExam('railway', this)">Railway</button>
+            <button class="cat-btn active-cat" onclick="loadMaterials('lekhpal', this)">UP Lekhpal</button>
+            <button class="cat-btn" onclick="loadMaterials('police', this)">UP Police</button>
+            <button class="cat-btn" onclick="loadMaterials('ssc', this)">SSC</button>
         </div>
 
-        <!-- UP Lekhpal Materials (Default Open) -->
-        <div id="lekhpal" class="exam-list active-list">
-            <div class="card">
-                <div>
-                    <h3>30-Day Study Strategy</h3>
-                    <p>Topic prioritization schedule</p>
-                </div>
-                <button class="btn" onclick="openPDF('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')">View PDF</button>
-            </div>
-            <div class="card">
-                <div>
-                    <h3>Gram Samaj & Vikas</h3>
-                    <p>Complete Chapter Notes</p>
-                </div>
-                <button class="btn" onclick="openPDF('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')">Read PDF</button>
-            </div>
-            <div class="card">
-                <div>
-                    <h3>Previous Year Papers</h3>
-                    <p>Lekhpal Solved Papers</p>
-                </div>
-                <button class="btn" onclick="openPDF('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')">Download</button>
-            </div>
-        </div>
-
-        <!-- SSC Materials -->
-        <div id="ssc" class="exam-list">
-            <div class="card">
-                <div>
-                    <h3>SSC CGL GK Notes</h3>
-                    <p>Static GK & Current Affairs</p>
-                </div>
-                <button class="btn" onclick="openPDF('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')">Read PDF</button>
-            </div>
-            <div class="card">
-                <div>
-                    <h3>Maths Short Tricks</h3>
-                    <p>Arithmetic & Advance Maths</p>
-                </div>
-                <button class="btn" onclick="openPDF('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')">Read PDF</button>
-            </div>
-        </div>
-
-        <!-- UP Police Materials -->
-        <div id="police" class="exam-list">
-            <div class="card">
-                <div>
-                    <h3>UP Police Constable</h3>
-                    <p>Hindi Vyakaran Notes</p>
-                </div>
-                <button class="btn" onclick="openPDF('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')">Read PDF</button>
-            </div>
-        </div>
-        
-        <!-- Railway Materials -->
-        <div id="railway" class="exam-list">
-            <div class="card">
-                <div>
-                    <h3>RRB NTPC Science</h3>
-                    <p>Physics, Chemistry, Bio Notes</p>
-                </div>
-                <button class="btn" onclick="openPDF('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')">Read PDF</button>
-            </div>
-        </div>
-
+        <!-- Dynamic Content Container -->
+        <div id="material-container"></div>
     </div>
 
-    <!-- PDF Viewer Modal -->
-    <div id="pdf-viewer" class="modal">
-        <div class="modal-header">
-            <span id="pdf-title">Reading Document...</span>
-            <button class="close-btn" onclick="closePDF()">Close ❌</button>
-        </div>
-        <iframe id="pdf-frame" src="" frameborder="0"></iframe>
-    </div>
-
-    <!-- Baki Tabs (Mock, Tools, Videos) yahan rahenge... (Purana code) -->
-        <!-- Mock Test UI -->
+    <!-- Mock Test UI -->
     <div id="mock" class="section">
         
-        <!-- Mock Test Dashboard (Start Screen) -->
+        <!-- Mock Test Dashboard -->
         <div id="test-dashboard">
             <h2 style="margin-top:0;">Available Mock Tests</h2>
             
@@ -121,7 +47,7 @@
             </div>
         </div>
 
-        <!-- Live Quiz Engine (Hidden by default) -->
+        <!-- Live Quiz Engine -->
         <div id="quiz-engine" style="display: none;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                 <span id="topic-badge" style="background: var(--primary); color: white; padding: 3px 10px; border-radius: 15px; font-size: 12px;">Topic</span>
@@ -141,7 +67,7 @@
             </div>
         </div>
 
-        <!-- Result Screen (Hidden by default) -->
+        <!-- Result Screen -->
         <div id="result-screen" style="display: none; text-align: center;">
             <h2>Test Submitted! 🎉</h2>
             <div class="card" style="flex-direction: column; text-align: center;">
@@ -150,25 +76,33 @@
             </div>
             <button class="btn" style="width: 100%; margin-top: 15px;" onclick="closeTest()">Go to Dashboard</button>
         </div>
-
     </div>
 
-        <div class="card mock-card">
-            <h3>Live Mock Test: General Knowledge</h3>
-            <p>Q1. UP ki rajdhani kya hai?</p>
-            <button class="btn option-btn">A) Lucknow</button>
-            <button class="btn option-btn">B) Prayagraj</button>
-        </div>
-    </div>
-
+    <!-- Tools Tab -->
     <div id="tools" class="section">
         <div class="card">
             <div>
                 <h3>Photo Resizer</h3>
                 <p>Compress image for exams</p>
             </div>
-            <button class="btn">Use</button>
+            <button class="btn" onclick="window.open('https://hisaabtool.blogspot.com/', '_blank')">Use</button>
         </div>
+        <div class="card">
+            <div>
+                <h3>Image to Text (OCR)</h3>
+                <p>Extract notes easily</p>
+            </div>
+            <button class="btn" onclick="window.open('https://hisaabtool.blogspot.com/', '_blank')">Use</button>
+        </div>
+    </div>
+
+    <!-- PDF Viewer Modal -->
+    <div id="pdf-viewer" class="modal">
+        <div class="modal-header">
+            <span id="pdf-title">Reading Document...</span>
+            <button class="close-btn" onclick="closePDF()">Close ❌</button>
+        </div>
+        <iframe id="pdf-frame" src="" frameborder="0"></iframe>
     </div>
 
     <!-- Bottom Navigation -->
@@ -176,6 +110,7 @@
         <div class="nav-item active" onclick="switchTab('home', 'Study Hub', this)"><span class="nav-icon">📚</span> Home</div>
         <div class="nav-item" onclick="switchTab('mock', 'Mock Tests', this)"><span class="nav-icon">📝</span> Mock</div>
         <div class="nav-item" onclick="switchTab('tools', 'Smart Tools', this)"><span class="nav-icon">🛠️</span> Tools</div>
+        <!-- YouTube Link Added -->
         <div class="nav-item" onclick="window.open('https://youtube.com/@rahul-t9j8b?si=Ua_dert6WO4pywU7', '_blank')"><span class="nav-icon">▶️</span> Videos</div>
     </div>
 

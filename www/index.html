@@ -11,56 +11,50 @@
 
     <!-- Home Tab (Study Materials) -->
     <div id="home" class="section active-section">
-        
-        <!-- Exam Categories Scroll -->
         <div class="category-scroll">
             <button class="cat-btn active-cat" onclick="loadMaterials('lekhpal', this)">UP Lekhpal</button>
             <button class="cat-btn" onclick="loadMaterials('police', this)">UP Police</button>
-            <button class="cat-btn" onclick="loadMaterials('ssc', this)">SSC</button>
+            <button class="cat-btn" onclick="loadMaterials('ssc', this)">SSC Exams</button>
         </div>
-
-        <!-- Dynamic Content Container -->
         <div id="material-container"></div>
     </div>
 
     <!-- Mock Test UI -->
     <div id="mock" class="section">
         
-        <!-- Mock Test Dashboard -->
+        <!-- Dashboard with 10-10 Sets -->
         <div id="test-dashboard">
-            <h2 style="margin-top:0;">Available Mock Tests</h2>
+            <h2 style="margin-top:0;">My Test Series</h2>
             
-            <div class="card">
-                <div>
-                    <h3>UP Lekhpal - Full Mock (25 Qs)</h3>
-                    <p>Hindi, GK, Gram Samaj</p>
-                </div>
-                <button class="btn" onclick="startTest('lekhpal25')">Start Test</button>
+            <!-- Lekhpal 10 Sets UI Container -->
+            <div style="background: #E0E7FF; padding: 10px; border-radius: 10px; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #4F46E5;">📝 UP Lekhpal PYQ Series</h3>
+                <p style="margin: 5px 0 10px 0; font-size: 12px; color: #4B5563;">100 Questions | 120 Mins</p>
+                <div id="lekhpal-tests-container"></div>
             </div>
-            
-            <div class="card">
-                <div>
-                    <h3>UP Police - Mega Test (50 Qs)</h3>
-                    <p>GK & Reasoning</p>
-                </div>
-                <button class="btn" onclick="startTest('police50')">Start Test</button>
+
+            <!-- UP Police 10 Sets UI Container -->
+            <div style="background: #FEF3C7; padding: 10px; border-radius: 10px; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #D97706;">🚔 UP Police PYQ Series</h3>
+                <p style="margin: 5px 0 10px 0; font-size: 12px; color: #4B5563;">150 Questions | 120 Mins</p>
+                <div id="police-tests-container"></div>
             </div>
         </div>
 
-        <!-- Live Quiz Engine -->
+        <!-- Quiz Engine -->
         <div id="quiz-engine" style="display: none;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                <span id="topic-badge" style="background: var(--primary); color: white; padding: 3px 10px; border-radius: 15px; font-size: 12px;">Topic</span>
-                <span id="q-counter" style="font-weight: bold;">Q: 1/25</span>
+                <span id="topic-badge">Topic</span>
+                <span id="q-counter" style="font-weight: bold;">Q: 1/100</span>
             </div>
             
+            <!-- Progress Bar -->
+            <div class="progress-bar"><div id="progress-fill"></div></div>
+
             <div class="card mock-card">
-                <h3 id="question-text">Question will appear here?</h3>
-                <div id="options-container" style="width: 100%;">
-                    <!-- Options JS se aayenge -->
-                </div>
+                <h3 id="question-text">Question?</h3>
+                <div id="options-container" style="width: 100%;"></div>
             </div>
-            
             <div style="display: flex; justify-content: space-between; margin-top: 15px;">
                 <button class="btn" style="background: #6B7280;" onclick="prevQuestion()">⬅ Back</button>
                 <button class="btn" id="next-btn" onclick="nextQuestion()">Next ➡</button>
@@ -71,8 +65,8 @@
         <div id="result-screen" style="display: none; text-align: center;">
             <h2>Test Submitted! 🎉</h2>
             <div class="card" style="flex-direction: column; text-align: center;">
-                <h1 id="score-text" style="color: var(--primary); font-size: 40px; margin: 10px 0;">0/25</h1>
-                <p id="score-message">Excellent Work!</p>
+                <h1 id="score-text" style="color: var(--primary); font-size: 40px; margin: 10px 0;">0/100</h1>
+                <p id="score-message">Message</p>
             </div>
             <button class="btn" style="width: 100%; margin-top: 15px;" onclick="closeTest()">Go to Dashboard</button>
         </div>
@@ -81,37 +75,23 @@
     <!-- Tools Tab -->
     <div id="tools" class="section">
         <div class="card">
-            <div>
-                <h3>Photo Resizer</h3>
-                <p>Compress image for exams</p>
-            </div>
-            <button class="btn" onclick="window.open('https://hisaabtool.blogspot.com/', '_blank')">Use</button>
-        </div>
-        <div class="card">
-            <div>
-                <h3>Image to Text (OCR)</h3>
-                <p>Extract notes easily</p>
-            </div>
+            <div><h3>Photo Resizer</h3><p>Compress image</p></div>
             <button class="btn" onclick="window.open('https://hisaabtool.blogspot.com/', '_blank')">Use</button>
         </div>
     </div>
 
     <!-- PDF Viewer Modal -->
     <div id="pdf-viewer" class="modal">
-        <div class="modal-header">
-            <span id="pdf-title">Reading Document...</span>
-            <button class="close-btn" onclick="closePDF()">Close ❌</button>
-        </div>
+        <div class="modal-header"><span id="pdf-title">Reading Document...</span><button class="close-btn" onclick="closePDF()">Close ❌</button></div>
         <iframe id="pdf-frame" src="" frameborder="0"></iframe>
     </div>
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom Nav -->
     <div class="nav-bar">
         <div class="nav-item active" onclick="switchTab('home', 'Study Hub', this)"><span class="nav-icon">📚</span> Home</div>
         <div class="nav-item" onclick="switchTab('mock', 'Mock Tests', this)"><span class="nav-icon">📝</span> Mock</div>
-        <div class="nav-item" onclick="switchTab('tools', 'Smart Tools', this)"><span class="nav-icon">🛠️</span> Tools</div>
-        <!-- YouTube Link Added -->
-        <div class="nav-item" onclick="window.open('https://youtube.com/@rahul-t9j8b?si=Ua_dert6WO4pywU7', '_blank')"><span class="nav-icon">▶️</span> Videos</div>
+        <div class="nav-item" onclick="switchTab('tools', 'Tools', this)"><span class="nav-icon">🛠️</span> Tools</div>
+        <div class="nav-item" onclick="window.open('https://youtube.com/@rahul-t9j8b', '_blank')"><span class="nav-icon">▶️</span> Videos</div>
     </div>
 
     <script src="script.js"></script>

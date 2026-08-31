@@ -97,7 +97,62 @@
     </div>
 
     <!-- Baki Tabs (Mock, Tools, Videos) yahan rahenge... (Purana code) -->
+        <!-- Mock Test UI -->
     <div id="mock" class="section">
+        
+        <!-- Mock Test Dashboard (Start Screen) -->
+        <div id="test-dashboard">
+            <h2 style="margin-top:0;">Available Mock Tests</h2>
+            
+            <div class="card">
+                <div>
+                    <h3>UP Lekhpal - Full Mock (25 Qs)</h3>
+                    <p>Hindi, GK, Gram Samaj</p>
+                </div>
+                <button class="btn" onclick="startTest('lekhpal25')">Start Test</button>
+            </div>
+            
+            <div class="card">
+                <div>
+                    <h3>UP Police - Mega Test (50 Qs)</h3>
+                    <p>GK & Reasoning</p>
+                </div>
+                <button class="btn" onclick="startTest('police50')">Start Test</button>
+            </div>
+        </div>
+
+        <!-- Live Quiz Engine (Hidden by default) -->
+        <div id="quiz-engine" style="display: none;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <span id="topic-badge" style="background: var(--primary); color: white; padding: 3px 10px; border-radius: 15px; font-size: 12px;">Topic</span>
+                <span id="q-counter" style="font-weight: bold;">Q: 1/25</span>
+            </div>
+            
+            <div class="card mock-card">
+                <h3 id="question-text">Question will appear here?</h3>
+                <div id="options-container" style="width: 100%;">
+                    <!-- Options JS se aayenge -->
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                <button class="btn" style="background: #6B7280;" onclick="prevQuestion()">⬅ Back</button>
+                <button class="btn" id="next-btn" onclick="nextQuestion()">Next ➡</button>
+            </div>
+        </div>
+
+        <!-- Result Screen (Hidden by default) -->
+        <div id="result-screen" style="display: none; text-align: center;">
+            <h2>Test Submitted! 🎉</h2>
+            <div class="card" style="flex-direction: column; text-align: center;">
+                <h1 id="score-text" style="color: var(--primary); font-size: 40px; margin: 10px 0;">0/25</h1>
+                <p id="score-message">Excellent Work!</p>
+            </div>
+            <button class="btn" style="width: 100%; margin-top: 15px;" onclick="closeTest()">Go to Dashboard</button>
+        </div>
+
+    </div>
+
         <div class="card mock-card">
             <h3>Live Mock Test: General Knowledge</h3>
             <p>Q1. UP ki rajdhani kya hai?</p>

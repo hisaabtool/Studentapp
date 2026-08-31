@@ -7,7 +7,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="header" id="app-title">Study Hub</div>
+    <!-- Header with Dark Mode Toggle -->
+    <div class="header">
+        <span id="app-title">Study Hub</span>
+        <button onclick="toggleTheme()" style="float: right; background: none; border: none; font-size: 20px; cursor: pointer;">🌙</button>
+    </div>
 
     <!-- Home Tab -->
     <div id="home" class="section active-section">
@@ -21,8 +25,6 @@
 
     <!-- Mock Test UI -->
     <div id="mock" class="section">
-        
-        <!-- Dashboard (JS automatically baki exams yahan fill karega) -->
         <div id="test-dashboard">
             <h2 style="margin-top:0;">My Test Series</h2>
             <div id="test-dashboard-container"></div>
@@ -34,9 +36,7 @@
                 <span id="topic-badge">Topic</span>
                 <span id="q-counter" style="font-weight: bold;">Q: 1/100</span>
             </div>
-            
             <div class="progress-bar"><div id="progress-fill"></div></div>
-
             <div class="card mock-card">
                 <h3 id="question-text">Question?</h3>
                 <div id="options-container" style="width: 100%;"></div>
@@ -51,24 +51,34 @@
         <div id="result-screen" style="display: none; text-align: center;">
             <h2>Test Submitted! 🎉</h2>
             <div class="card" style="flex-direction: column; text-align: center;">
-                <h1 id="score-text" style="color: var(--primary); font-size: 40px; margin: 10px 0;">0/100</h1>
+                <h1 id="score-text" style="color: var(--primary); font-size: 40px; margin: 10px 0;">0</h1>
                 <p id="score-message">Message</p>
+                <p style="font-size: 12px; color: #EF4444; margin-top: 5px;">(Negative Marking Applied: -0.25)</p>
             </div>
-            <button class="btn" style="width: 100%; margin-top: 15px;" onclick="closeTest()">Go to Dashboard</button>
+            <button class="btn" style="width: 100%; margin-top: 10px; background: #10B981;" onclick="showSolutions()">View Solutions 📖</button>
+            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="closeTest()">Go to Dashboard</button>
+        </div>
+
+        <!-- Detailed Solutions Screen (Hidden Default) -->
+        <div id="solution-screen" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin:0;">Solutions</h2>
+                <button class="btn" style="background: #EF4444; padding: 5px 10px;" onclick="closeSolutions()">Back ❌</button>
+            </div>
+            <div id="solutions-container"></div>
         </div>
     </div>
 
-    <!-- Tools -->
+    <!-- Tools & PDFs -->
     <div id="tools" class="section">
         <div class="card">
             <div><h3>Photo Resizer</h3><p>Compress image</p></div>
             <button class="btn" onclick="window.open('https://hisaabtool.blogspot.com/', '_blank')">Use</button>
         </div>
     </div>
-
-    <!-- PDF Viewer -->
+    
     <div id="pdf-viewer" class="modal">
-        <div class="modal-header"><span id="pdf-title">Reading Document...</span><button class="close-btn" onclick="closePDF()">Close ❌</button></div>
+        <div class="modal-header"><span id="pdf-title">Reading...</span><button class="close-btn" onclick="closePDF()">Close ❌</button></div>
         <iframe id="pdf-frame" src="" frameborder="0"></iframe>
     </div>
 

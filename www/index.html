@@ -9,7 +9,7 @@
 <body>
     <div class="header" id="app-title">Study Hub</div>
 
-    <!-- Home Tab (Study Materials) -->
+    <!-- Home Tab -->
     <div id="home" class="section active-section">
         <div class="category-scroll">
             <button class="cat-btn active-cat" onclick="loadMaterials('lekhpal', this)">UP Lekhpal</button>
@@ -22,23 +22,10 @@
     <!-- Mock Test UI -->
     <div id="mock" class="section">
         
-        <!-- Dashboard with 10-10 Sets -->
+        <!-- Dashboard (JS automatically baki exams yahan fill karega) -->
         <div id="test-dashboard">
             <h2 style="margin-top:0;">My Test Series</h2>
-            
-            <!-- Lekhpal 10 Sets UI Container -->
-            <div style="background: #E0E7FF; padding: 10px; border-radius: 10px; margin-bottom: 15px;">
-                <h3 style="margin: 0; color: #4F46E5;">📝 UP Lekhpal PYQ Series</h3>
-                <p style="margin: 5px 0 10px 0; font-size: 12px; color: #4B5563;">100 Questions | 120 Mins</p>
-                <div id="lekhpal-tests-container"></div>
-            </div>
-
-            <!-- UP Police 10 Sets UI Container -->
-            <div style="background: #FEF3C7; padding: 10px; border-radius: 10px; margin-bottom: 15px;">
-                <h3 style="margin: 0; color: #D97706;">🚔 UP Police PYQ Series</h3>
-                <p style="margin: 5px 0 10px 0; font-size: 12px; color: #4B5563;">150 Questions | 120 Mins</p>
-                <div id="police-tests-container"></div>
-            </div>
+            <div id="test-dashboard-container"></div>
         </div>
 
         <!-- Quiz Engine -->
@@ -48,7 +35,6 @@
                 <span id="q-counter" style="font-weight: bold;">Q: 1/100</span>
             </div>
             
-            <!-- Progress Bar -->
             <div class="progress-bar"><div id="progress-fill"></div></div>
 
             <div class="card mock-card">
@@ -72,7 +58,7 @@
         </div>
     </div>
 
-    <!-- Tools Tab -->
+    <!-- Tools -->
     <div id="tools" class="section">
         <div class="card">
             <div><h3>Photo Resizer</h3><p>Compress image</p></div>
@@ -80,7 +66,7 @@
         </div>
     </div>
 
-    <!-- PDF Viewer Modal -->
+    <!-- PDF Viewer -->
     <div id="pdf-viewer" class="modal">
         <div class="modal-header"><span id="pdf-title">Reading Document...</span><button class="close-btn" onclick="closePDF()">Close ❌</button></div>
         <iframe id="pdf-frame" src="" frameborder="0"></iframe>

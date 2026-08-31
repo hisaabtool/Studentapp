@@ -11,9 +11,16 @@ body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); margi
 .card p { margin: 0; font-size: 14px; color: #6B7280; }
 .btn { background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-/* Mock Test Specific */
+/* Category Scroll */
+.category-scroll { display: flex; overflow-x: auto; white-space: nowrap; padding: 10px 0 20px 0; scrollbar-width: none; }
+.category-scroll::-webkit-scrollbar { display: none; }
+.cat-btn { background: #E5E7EB; color: #4B5563; border: none; padding: 8px 20px; border-radius: 20px; margin-right: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+.cat-btn.active-cat { background: var(--primary); color: white; box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3); }
+
+/* Mock Test UI */
 .mock-card { flex-direction: column; align-items: flex-start; }
-.option-btn { width: 100%; margin-top: 10px; background: #E5E7EB; color: #1F2937; text-align: left; }
+.option-btn { width: 100%; margin-top: 10px; background: #E5E7EB; color: #1F2937; text-align: left; padding: 12px; border: 2px solid transparent; transition: 0.2s; }
+.option-btn.selected { background: #E0E7FF; border: 2px solid var(--primary); color: var(--primary); font-weight: bold; }
 
 /* Bottom Nav */
 .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); border-radius: 15px 15px 0 0; }

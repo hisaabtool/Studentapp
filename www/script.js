@@ -1,89 +1,147 @@
-// --- DATABASE ---
+// --- 1. STUDY MATERIAL DATABASE ---
 const materialDB = {
     'lekhpal': {
-        'Hindi Vyakaran': [
-            { chapter: 'Chapter 1: वर्णमाला (Varnamala)', link: 'https://example.com/pdf1' },
-            { chapter: 'Chapter 2: समास (Samas)', link: 'https://example.com/pdf2' }
-        ],
-        'Gram Samaj & Vikas': [
-            { chapter: 'Chapter 1: कृषि व्यवस्था', link: 'https://example.com/pdf3' }
-        ]
+        'Hindi Vyakaran': [{ chapter: 'वर्णमाला और समास', link: '#' }],
+        'Gram Samaj & Vikas': [{ chapter: 'कृषि एवं पंचायती राज', link: '#' }]
     },
     'police': {
-        'Previous Year Papers': [
-            { chapter: 'UP Police PYQ Set 03', link: 'https://adda247-wp-multisite-assets.s3.ap-south-1.amazonaws.com/wp-content/uploads/multisite/sites/2/2023/12/23210354/UP-Police-Previous-Year-Paper-03.pdf' }
-        ]
+        'UP Police Constable': [{ chapter: 'PYQ Set 1 (Hindi)', link: '#' }]
     },
-    'ssc': {
-        'SSC CGL Original Papers': [
-            { chapter: 'CGL Paper (English)', link: 'https://www.adda247.com/jobs/wp-content/uploads/2021/05/31123422/SSC-CGL-28-Dec-English.pdf' }
-        ]
+    'ssc': { 
+        'SSC CGL (Graduate Level)': [{ chapter: 'CGL Tier 1 - English Paper', link: 'https://www.adda247.com/jobs/wp-content/uploads/2021/05/31123422/SSC-CGL-28-Dec-English.pdf' }]
     }
 };
 
-const mockDatabase = {
-    'lekhpal25': [
-        { topic: "Hindi", q: "इनमें से 'आग' का पर्यायवाची कौन सा है?", options: ["अनल", "अनिल", "सलिल", "गगन"], ans: 0 },
-        { topic: "UP GK", q: "उत्तर प्रदेश का राजकीय पुष्प क्या है?", options: ["कमल", "पलाश", "गुलाब", "गेंदा"], ans: 1 },
-        { topic: "Gram Samaj", q: "एक बीघा में कितने बिस्वा होते हैं?", options: ["10", "15", "20", "25"], ans: 2 }
-    ],
-    'police50': [
-        { topic: "Polity", q: "भारतीय संविधान में कुल कितनी अनुसूचियां हैं?", options: ["8", "10", "12", "14"], ans: 2 },
-        { topic: "Reasoning", q: "यदि A=1, B=2 है, तो CAB का मान क्या होगा?", options: ["5", "6", "7", "8"], ans: 1 }
-    ]
+// --- 2. MOCK TEST DATABASE GENERATOR (10 Sets Each) ---
+const mockDatabase = {};
+
+// Asali Lekhpal ke kuch questions jo Set 1 me dikhenge
+const realLekhpalQs = [
+    { t: "Hindi", q: "'आग' का पर्यायवाची कौन सा है?", o: ["अनल", "अनिल", "सलिल", "गगन"], a: 0 },
+    { t: "Hindi", q: "महोदय का संधि विच्छेद क्या है?", o: ["महो+दय", "महा+उदय", "मही+उदय", "महा+औदय"], a: 1 },
+    { t: "UP GK", q: "उत्तर प्रदेश का राजकीय पुष्प क्या है?", o: ["कमल", "पलाश", "गुलाब", "गेंदा"], a: 1 },
+    { t: "Gram Samaj", q: "एक बीघा में कितने बिस्वा होते हैं?", o: ["10", "15", "20", "25"], a: 2 },
+    { t: "Maths", q: "100 का 25% कितना होगा?", o: ["20", "25", "30", "50"], a: 1 }
+];
+
+// Lekhpal ke 10 Sets generate karna (Har set me 100 questions)
+for(let setNum = 1; setNum <= 10; setNum++) {
+    let testArray = [];
+    for(let qNum = 1; qNum <= 100; qNum++) {
+        // Agar Set 1 hai aur shuru ke questions hain, toh asali data daalo
+        if(setNum === 1 && qNum <= realLekhpalQs.length) {
+            testArray.push(realLekhpalQs[qNum-1]);
+        } else {
+            // Baaki 100 poore karne ke liye auto-fill taaki app test ho sake
+            testArray.push({ t: "Lekhpal Section", q: `Set ${setNum} - Lekhpal Question No. ${qNum}`, o: ["Option A", "Option B", "Option C", "Option D"], a: 0 });
+        }
+    }
+    mockDatabase['lekhpal_set_' + setNum] = testArray;
+}
+
+// UP Police ke 10 Sets generate karna (Har set me 150 questions)
+for(let setNum = 1; setNum <= 10; setNum++) {
+    let testArray = [];
+    for(let qNum = 1; qNum <= 150; qNum++) {
+        testArray.push({ t: "UP Police Section", q: `Set ${setNum} - Police PYQ No. ${qNum}`, o: ["A", "B", "C", "D"], a: 1 });
+    }
+    mockDatabase['police_set_' + setNum] = testArray;
+}
+
+
+// --- 3. APP LOGIC & TABS ---
+window.onload = () => { 
+    loadMaterials('lekhpal', document.querySelector('.cat-btn')); 
+    renderTestSeriesDashboard(); // Dashboard UI banayega
 };
 
-// --- TABS & UI LOGIC ---
 function switchTab(tabId, title, element) {
     document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active-section'));
     document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-    
     document.getElementById(tabId).classList.add('active-section');
     element.classList.add('active');
     document.getElementById('app-title').innerText = title;
+    
+    if(tabId === 'mock') checkTestProgress();
 }
 
 function loadMaterials(examId, element) {
     document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active-cat'));
     if(element) element.classList.add('active-cat');
-
     const container = document.getElementById('material-container');
     container.innerHTML = ''; 
-    container.style.animation = 'none'; 
-    setTimeout(() => container.style.animation = 'fadeIn 0.4s ease', 10);
-
     const examData = materialDB[examId];
     
     for (let subject in examData) {
         let subjectHtml = `<div style="margin-top: 20px; font-size: 18px; font-weight: bold; color: var(--primary); border-bottom: 2px solid #E5E7EB; padding-bottom: 5px;">📚 ${subject}</div>`;
-        
         examData[subject].forEach(item => {
-            subjectHtml += `
-            <div class="card" style="margin-top: 10px; padding: 15px;">
-                <div style="flex: 1;"><h3 style="font-size: 16px;">${item.chapter}</h3></div>
-                <button class="btn" onclick="openPDF('${item.link}')">Read</button>
-            </div>`;
+            subjectHtml += `<div class="card" style="margin-top: 10px; padding: 15px;"><div style="flex: 1;"><h3 style="font-size: 15px;">${item.chapter}</h3></div><button class="btn" onclick="openPDF('${item.link}')">Read</button></div>`;
         });
         container.innerHTML += subjectHtml;
     }
 }
 
-// --- PDF VIEWER LOGIC ---
 function openPDF(pdfUrl) {
-    const viewer = document.getElementById('pdf-viewer');
-    const frame = document.getElementById('pdf-frame');
-    frame.src = `https://docs.google.com/gview?embedded=true&url=${pdfUrl}`;
-    viewer.style.display = 'flex';
+    if(pdfUrl === '#') { alert("Yahan apna PDF link lagayein!"); return; }
+    document.getElementById('pdf-viewer').style.display = 'flex';
+    document.getElementById('pdf-frame').src = `https://docs.google.com/gview?embedded=true&url=${pdfUrl}`;
 }
 function closePDF() {
     document.getElementById('pdf-viewer').style.display = 'none';
     document.getElementById('pdf-frame').src = '';
 }
 
-// --- MOCK TEST LOGIC ---
+// --- 4. MOCK TEST UI & ENGINE ---
+let activeTestId = "";
 let currentTest = [], currentQuestionIndex = 0, userAnswers = [];
 
+// JS se HTML me 10-10 Tests ke cards banana
+function renderTestSeriesDashboard() {
+    let lekhpalHtml = "", policeHtml = "";
+    
+    for(let i=1; i<=10; i++) {
+        lekhpalHtml += `
+        <div class="test-card">
+            <div>
+                <h4>PYQ Set - ${i}</h4>
+                <span id="badge-lekhpal_set_${i}" class="status-badge">Not Attempted ⏳</span>
+            </div>
+            <button class="btn" onclick="startTest('lekhpal_set_${i}')">Start</button>
+        </div>`;
+        
+        policeHtml += `
+        <div class="test-card">
+            <div>
+                <h4>PYQ Set - ${i}</h4>
+                <span id="badge-police_set_${i}" class="status-badge">Not Attempted ⏳</span>
+            </div>
+            <button class="btn" onclick="startTest('police_set_${i}')">Start</button>
+        </div>`;
+    }
+    
+    document.getElementById('lekhpal-tests-container').innerHTML = lekhpalHtml;
+    document.getElementById('police-tests-container').innerHTML = policeHtml;
+    checkTestProgress();
+}
+
+function checkTestProgress() {
+    for(let i=1; i<=10; i++) {
+        let l_id = 'lekhpal_set_' + i;
+        let p_id = 'police_set_' + i;
+        
+        if(localStorage.getItem('completed_' + l_id)) {
+            let badge = document.getElementById('badge-' + l_id);
+            if(badge) { badge.innerText = "Completed ✅"; badge.classList.add('completed'); }
+        }
+        if(localStorage.getItem('completed_' + p_id)) {
+            let badge = document.getElementById('badge-' + p_id);
+            if(badge) { badge.innerText = "Completed ✅"; badge.classList.add('completed'); }
+        }
+    }
+}
+
 function startTest(testId) {
+    activeTestId = testId;
     currentTest = mockDatabase[testId];
     currentQuestionIndex = 0;
     userAnswers = new Array(currentTest.length).fill(null); 
@@ -95,23 +153,28 @@ function startTest(testId) {
 
 function loadQuestion() {
     let qData = currentTest[currentQuestionIndex];
-    document.getElementById('topic-badge').innerText = qData.topic;
+    document.getElementById('topic-badge').innerText = qData.t;
     document.getElementById('q-counter').innerText = `Q: ${currentQuestionIndex + 1}/${currentTest.length}`;
     document.getElementById('question-text').innerText = qData.q;
     
+    // Progress Bar Update
+    let progressPercent = ((currentQuestionIndex + 1) / currentTest.length) * 100;
+    document.getElementById('progress-fill').style.width = progressPercent + "%";
+    
     let optionsHtml = '';
-    qData.options.forEach((opt, index) => {
-        let isSelected = userAnswers[currentQuestionIndex] === index ? 'selected' : '';
-        optionsHtml += `<button class="btn option-btn ${isSelected}" onclick="selectAnswer(${index})">${opt}</button>`;
+    qData.o.forEach((opt, index) => {
+        let isSelected = userAnswers[currentQuestionIndex] === index ? 'background: #E0E7FF; border: 2px solid var(--primary);' : 'background: #E5E7EB; border: 2px solid transparent;';
+        optionsHtml += `<button style="width: 100%; margin-top: 10px; color: #1F2937; text-align: left; padding: 12px; font-weight: 500; border-radius: 8px; transition: 0.2s; ${isSelected}" onclick="selectAnswer(${index})">${opt}</button>`;
     });
     document.getElementById('options-container').innerHTML = optionsHtml;
 
+    let nextBtn = document.getElementById('next-btn');
     if (currentQuestionIndex === currentTest.length - 1) {
-        document.getElementById('next-btn').innerText = "Submit Test ✔️";
-        document.getElementById('next-btn').style.background = "#10B981"; 
+        nextBtn.innerText = "Submit Test ✔️";
+        nextBtn.style.background = "#10B981"; 
     } else {
-        document.getElementById('next-btn').innerText = "Next ➡";
-        document.getElementById('next-btn').style.background = "var(--primary)";
+        nextBtn.innerText = "Next ➡";
+        nextBtn.style.background = "var(--primary)";
     }
 }
 
@@ -131,8 +194,10 @@ function prevQuestion() {
 function calculateResult() {
     let score = 0;
     for (let i = 0; i < currentTest.length; i++) {
-        if (userAnswers[i] === currentTest[i].ans) score++;
+        if (userAnswers[i] === currentTest[i].a) score++;
     }
+
+    localStorage.setItem('completed_' + activeTestId, 'true');
 
     document.getElementById('quiz-engine').style.display = 'none';
     document.getElementById('result-screen').style.display = 'block';
@@ -147,7 +212,5 @@ function calculateResult() {
 function closeTest() {
     document.getElementById('result-screen').style.display = 'none';
     document.getElementById('test-dashboard').style.display = 'block';
+    checkTestProgress(); 
 }
-
-// Init App
-window.onload = () => { loadMaterials('lekhpal', document.querySelector('.cat-btn')); };

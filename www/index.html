@@ -7,59 +7,89 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Header with Dark Mode Toggle -->
     <div class="header">
         <span id="app-title">Study Hub</span>
         <button onclick="toggleTheme()" style="float: right; background: none; border: none; font-size: 20px; cursor: pointer;">🌙</button>
     </div>
 
-    <!-- Home Tab -->
+    <!-- Home Tab (Study Material) -->
     <div id="home" class="section active-section">
         <div class="category-scroll">
             <button class="cat-btn active-cat" onclick="loadMaterials('lekhpal', this)">UP Lekhpal</button>
             <button class="cat-btn" onclick="loadMaterials('police', this)">UP Police</button>
-            <button class="cat-btn" onclick="loadMaterials('ssc', this)">SSC Exams</button>
         </div>
         <div id="material-container"></div>
     </div>
 
-    <!-- Mock Test UI -->
+    <!-- Mock Test UI (Advanced) -->
     <div id="mock" class="section">
-        <div id="test-dashboard">
-            <h2 style="margin-top:0;">My Test Series</h2>
-            <div id="test-dashboard-container"></div>
+        
+        <!-- Step 1: Exam Category Selection -->
+        <div id="mock-category-screen">
+            <h2 style="margin-top:0;">Select Exam</h2>
+            <div class="exam-folder" onclick="showTestList('lekhpal')">
+                <h3>📝 UP Lekhpal PYQ Series</h3>
+                <p>Real Previous Year Papers (Hindi, GK, Gram Samaj)</p>
+            </div>
+            <div class="exam-folder" onclick="showTestList('police')">
+                <h3>🚔 UP Police Constable</h3>
+                <p>Real Previous Year Papers (GK, Hindi, Reasoning)</p>
+            </div>
         </div>
 
-        <!-- Quiz Engine -->
-        <div id="quiz-engine" style="display: none;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                <span id="topic-badge">Topic</span>
-                <span id="q-counter" style="font-weight: bold;">Q: 1/100</span>
+        <!-- Step 2: Test List Screen -->
+        <div id="mock-list-screen" style="display: none;">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <button class="btn" style="background: #6B7280; margin-right: 10px;" onclick="backToCategories()">⬅ Back</button>
+                <h2 id="selected-exam-title" style="margin:0;">Test Series</h2>
             </div>
-            <div class="progress-bar"><div id="progress-fill"></div></div>
-            <div class="card mock-card">
-                <h3 id="question-text">Question?</h3>
+            <div id="test-list-container"></div>
+        </div>
+
+        <!-- Step 3: Real Exam Engine (TCS Style) -->
+        <div id="quiz-engine" style="display: none;">
+            <!-- Top Bar with Timer -->
+            <div class="exam-top-bar">
+                <div class="exam-title-small" id="live-exam-title">UP Lekhpal Test</div>
+                <div class="timer-box">⏱️ <span id="timer">30:00</span></div>
+            </div>
+
+            <div class="card mock-card" style="margin-top: 10px;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #E5E7EB; padding-bottom: 10px; margin-bottom: 10px;">
+                    <span style="font-weight: bold; color: var(--primary);">Question No. <span id="q-number-display">1</span></span>
+                    <span id="topic-badge">Topic</span>
+                </div>
+                <h3 id="question-text">Question goes here?</h3>
                 <div id="options-container" style="width: 100%;"></div>
             </div>
-            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                <button class="btn" style="background: #6B7280;" onclick="prevQuestion()">⬅ Back</button>
-                <button class="btn" id="next-btn" onclick="nextQuestion()">Next ➡</button>
+            
+            <!-- Question Number Palette (Grid) -->
+            <div class="palette-container">
+                <div style="font-size: 12px; margin-bottom: 5px; font-weight: bold;">Question Palette:</div>
+                <div id="q-palette" class="q-grid"></div>
             </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                <button class="btn" style="background: #EF4444;" onclick="clearResponse()">Clear</button>
+                <button class="btn" style="background: var(--primary);" id="save-next-btn" onclick="saveAndNext()">Save & Next ➡</button>
+            </div>
+            <button class="btn" style="width: 100%; margin-top: 15px; background: #10B981;" onclick="submitExamPrompt()">Final Submit ✔️</button>
         </div>
 
-        <!-- Result Screen -->
+        <!-- Step 4: Result Screen -->
         <div id="result-screen" style="display: none; text-align: center;">
-            <h2>Test Submitted! 🎉</h2>
+            <h2>Exam Submitted! 🎉</h2>
             <div class="card" style="flex-direction: column; text-align: center;">
                 <h1 id="score-text" style="color: var(--primary); font-size: 40px; margin: 10px 0;">0</h1>
                 <p id="score-message">Message</p>
-                <p style="font-size: 12px; color: #EF4444; margin-top: 5px;">(Negative Marking Applied: -0.25)</p>
+                <p style="font-size: 12px; color: #EF4444; margin-top: 5px;">Negative Marking Applied (-0.25)</p>
             </div>
             <button class="btn" style="width: 100%; margin-top: 10px; background: #10B981;" onclick="showSolutions()">View Solutions 📖</button>
-            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="closeTest()">Go to Dashboard</button>
+            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="closeTest()">Exit to Dashboard</button>
         </div>
 
-        <!-- Detailed Solutions Screen (Hidden Default) -->
+        <!-- Solutions Screen -->
         <div id="solution-screen" style="display: none;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h2 style="margin:0;">Solutions</h2>
@@ -69,16 +99,16 @@
         </div>
     </div>
 
-    <!-- Tools & PDFs -->
+    <!-- Tools -->
     <div id="tools" class="section">
         <div class="card">
-            <div><h3>Photo Resizer</h3><p>Compress image</p></div>
+            <div><h3>Photo Resizer</h3></div>
             <button class="btn" onclick="window.open('https://hisaabtool.blogspot.com/', '_blank')">Use</button>
         </div>
     </div>
     
     <div id="pdf-viewer" class="modal">
-        <div class="modal-header"><span id="pdf-title">Reading...</span><button class="close-btn" onclick="closePDF()">Close ❌</button></div>
+        <div class="modal-header"><span id="pdf-title">Reading...</span><button class="close-btn" onclick="closePDF()">Close</button></div>
         <iframe id="pdf-frame" src="" frameborder="0"></iframe>
     </div>
 
@@ -89,7 +119,6 @@
         <div class="nav-item" onclick="switchTab('tools', 'Tools', this)"><span class="nav-icon">🛠️</span> Tools</div>
         <div class="nav-item" onclick="window.open('https://youtube.com/@rahul-t9j8b', '_blank')"><span class="nav-icon">▶️</span> Videos</div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
